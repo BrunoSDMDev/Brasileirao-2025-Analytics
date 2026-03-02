@@ -1,4 +1,5 @@
 import json
+import pandas as pd
 
 
 def analisar_desempenho(jogos_realizados, time_analisado):
@@ -13,11 +14,11 @@ def analisar_desempenho(jogos_realizados, time_analisado):
         "gols_sofridos": 0
     }
 
-    # Percorrendo todos os jogos do JSON
+    # Percorrendo todos os jogos 
     for jogo in jogos_realizados.values():
 
-        # O resultado vem no formato "2 X 1"
-        # Então primeiro eu separo os gols da casa e os gols de fora
+        
+        # Separo os gols da casa e os gols de fora
         resultado = jogo["Result"]
         gols_casa, gols_fora = resultado.split(" X ")
 
@@ -45,7 +46,7 @@ def analisar_desempenho(jogos_realizados, time_analisado):
         estatisticas["gols_marcados"] += gols_time
         estatisticas["gols_sofridos"] += gols_adv
 
-        # Agora vem a comparação do placar
+        # Comparação do placar
         if gols_time > gols_adv:
             # Se ganhou, preciso saber se foi em casa ou fora
             if contexto == "casa":
@@ -73,5 +74,12 @@ time = "Vitória / BA"
 
 resultado = analisar_desempenho(data, time)
 
-# Printando o resultado final
+# Transformando em DataFrame
+df = pd.DataFrame([resultado])
+df.insert(0, "time", time)
+
+# Salvando em CSV
+df.to_csv("estatisticas_time.csv", index=False, encoding="utf-8")
+
+print("CSV criado com sucesso.")
 print(resultado)
